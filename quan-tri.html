@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Quản lý ưu đãi và ảnh thẻ – GOLD PRIVILEGE</title>
+<style>
+:root{--bg:#f4efe4;--panel:#fff;--line:#e2d9c2;--text:#1c1a14;--muted:#5b6270;--gold:#8a6a12;--btn:#1c1a14;--btnt:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#07090d;--panel:#0f131a;--line:#232b38;--text:#e8ecf3;--muted:#8e9bb0;--gold:#e0b84a;--btn:#e0b84a;--btnt:#111}}
+:root[data-theme="dark"]{--bg:#07090d;--panel:#0f131a;--line:#232b38;--text:#e8ecf3;--muted:#8e9bb0;--gold:#e0b84a;--btn:#e0b84a;--btnt:#111}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto;padding:28px 18px 130px}
+h1{font-size:26px;margin:0 0 6px}
+h2{font-size:17px;margin:0 0 12px;color:var(--gold)}
+.sub{color:var(--muted);margin:0 0 20px;font-size:14px}
+.how{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:14px}
+.how ol{margin:6px 0 0;padding-left:20px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:16px}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input[type=text],input[type=number]{width:100%;padding:10px 12px;font-size:16px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+input[type=file]{font-size:14px;max-width:100%}
+.row{display:grid;grid-template-columns:1fr 130px auto;gap:8px;margin-bottom:8px;align-items:center}
+.row1{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px;align-items:center}
+.row3{display:grid;grid-template-columns:1fr 1.6fr 140px auto;gap:8px;margin-bottom:8px;align-items:center}
+@media (max-width:640px){.row3{grid-template-columns:1fr 1fr}.row3 button{grid-column:1/-1}}
+button{font:inherit;font-size:14px;font-weight:600;padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.sm{padding:8px 12px}
+button.del{color:#b3261e}
+button.main{background:var(--btn);color:var(--btnt);border-color:var(--btn);padding:12px 20px;font-size:15px}
+.add{margin-top:4px}
+.small{font-size:12px;color:var(--muted);margin:10px 0 6px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.imgs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.imgbox img{display:block;width:100%;height:auto;border-radius:10px;border:1px solid var(--line);margin-bottom:10px;background:var(--bg)}
+.imgbox .acts{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center}
+#msg{font-size:13px;color:var(--gold);width:100%;text-align:center;min-height:18px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Quản lý thẻ GOLD PRIVILEGE</h1>
+<p class="sub">Sửa ưu đãi, thay ảnh thẻ. Chỉ ảnh hưởng đến trang của hạng thẻ này.</p>
+<div class="how"><b>Cách cập nhật trang web</b>
+<ol><li>Sửa nội dung bên dưới. Muốn đổi ảnh thẻ thì chọn ảnh mới ở mục Ảnh thẻ.</li>
+<li>Bấm <b>Tải file uu-dai.json</b>, và bấm tải ảnh nếu có đổi ảnh.</li>
+<li>Chép các file vừa tải vào thư mục website, chọn Ghi đè (Replace) file cũ.</li>
+<li>Kéo cả thư mục vào mục Deploys của project trên Netlify.</li></ol></div>
+<div id="app"></div>
+</div>
+<div class="bar"><div id="msg"></div><button class="main" id="dl" type="button">Tải file uu-dai.json</button><button id="cp" type="button">Sao chép nội dung JSON</button></div>
+<script>
+var DEF={
+  "capNhat": "02/11/2026",
+  "hotline": "0901 881 326",
+  "thongBao": "",
+  "dacQuyen": [
+    "Ưu đãi khi mua xe mới",
+    "Ưu tiên tiếp nhận dịch vụ"
+  ],
+  "uuDai": [
+    {
+      "xe": "RAM - JEEP",
+      "trieu": 120
+    },
+    {
+      "xe": "BMW - MINI",
+      "trieu": 80
+    },
+    {
+      "xe": "PEUGEOT",
+      "trieu": 30
+    },
+    {
+      "xe": "KIA Carnival và Mazda CX-90",
+      "trieu": 20
+    }
+  ],
+  "quaTang": [],
+  "uuDaiThem": []
+};
+var S=DEF;
+function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e}
+function inp(val,ph,type,on){var i=document.createElement("input");i.type=type||"text";if(type==="number"){i.step="any";i.inputMode="decimal"}i.value=val==null?"":val;i.placeholder=ph||"";i.addEventListener("input",function(){on(type==="number"?(i.value===""?"":Number(i.value)):i.value)});return i}
+function btn(t,cls,on){var b=el("button",cls,t);b.type="button";b.addEventListener("click",on);return b}
+function lab(box,t,input){box.appendChild(el("label",null,t));box.appendChild(input)}
+function msg(t){var m=document.getElementById("msg");m.textContent=t;setTimeout(function(){m.textContent=""},5000)}
+function today(){var d=new Date();function p(n){return(n<10?"0":"")+n}return p(d.getDate())+"/"+p(d.getMonth()+1)+"/"+d.getFullYear()}
+function save(blob,name){var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},1500)}
+function norm(d){d=d||{};["dacQuyen","uuDai","quaTang","uuDaiThem"].forEach(function(k){d[k]=d[k]||[]});d.capNhat=d.capNhat||"";d.hotline=d.hotline||"";d.thongBao=d.thongBao||"";return d}
+function imgBox(file,label){
+var b=el("div","imgbox");b.appendChild(el("div","small",label));
+var im=document.createElement("img");im.alt=label;im.src=file+"?t="+Date.now();b.appendChild(im);
+var f=document.createElement("input");f.type="file";f.accept="image/*";
+var blob=null;
+var d=btn("Tải ảnh "+file,"sm",function(){if(blob)save(blob,file)});d.disabled=true;
+f.addEventListener("change",function(){
+var fl=f.files[0];if(!fl)return;
+var r=new FileReader();
+r.onload=function(){var i=new Image();i.onload=function(){
+var w=Math.min(1400,i.naturalWidth),h=Math.round(i.naturalHeight*w/i.naturalWidth);
+var c=document.createElement("canvas");c.width=w;c.height=h;var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(i,0,0,w,h);
+c.toBlob(function(bl){blob=bl;im.src=URL.createObjectURL(bl);d.disabled=false;msg("Đã xử lý ảnh. Bấm nút Tải ảnh để lưu thành "+file+", rồi chép đè vào thư mục website.")},"image/jpeg",0.9)};
+i.src=r.result};
+r.readAsDataURL(fl)});
+var a=el("div","acts");a.appendChild(f);a.appendChild(d);b.appendChild(a);
+return b}
+function build(){
+var root=document.getElementById("app");root.innerHTML="";
+var g=el("section","box");g.appendChild(el("h2",null,"Thông tin chung"));
+lab(g,"Ngày cập nhật ưu đãi (hiện ở đầu trang web)",inp(S.capNhat,"VD: 02/11/2026","text",function(v){S.capNhat=v}));
+g.appendChild(btn("Đặt là hôm nay","sm add",function(){S.capNhat=today();build()}));
+lab(g,"Hotline ưu tiên",inp(S.hotline,"VD: 0901 881 326","text",function(v){S.hotline=v}));
+lab(g,"Thông báo nổi bật (để trống nếu không dùng)",inp(S.thongBao,"VD: Tháng 11: tặng gói phụ kiện cho khách đặt cọc sớm","text",function(v){S.thongBao=v}));
+root.appendChild(g);
+var im=el("section","box");im.appendChild(el("h2",null,"Ảnh thẻ"));
+var w=el("div","imgs");w.appendChild(imgBox("the-truoc.jpg","Mặt trước"));w.appendChild(imgBox("the-sau.jpg","Mặt sau"));im.appendChild(w);
+root.appendChild(im);
+var dq=el("section","box");dq.appendChild(el("h2",null,"Đặc quyền in trên thẻ"));
+S.dacQuyen.forEach(function(x,i){var r=el("div","row1");r.appendChild(inp(x,"Ví dụ: Ưu tiên tiếp nhận dịch vụ","text",function(v){S.dacQuyen[i]=v}));r.appendChild(btn("Xóa","sm del",function(){S.dacQuyen.splice(i,1);build()}));dq.appendChild(r)});
+dq.appendChild(btn("+ Thêm đặc quyền","sm add",function(){S.dacQuyen.push("");build()}));
+root.appendChild(dq);
+var b=el("section","box");b.appendChild(el("h2",null,"Ưu đãi khi mua xe (số triệu đồng tối đa)"));
+S.uuDai.forEach(function(x,i){var r=el("div","row");
+r.appendChild(inp(x.xe,"Dòng xe, ví dụ BMW - MINI","text",function(v){x.xe=v}));
+r.appendChild(inp(x.trieu,"Số triệu","number",function(v){x.trieu=v}));
+r.appendChild(btn("Xóa","sm del",function(){S.uuDai.splice(i,1);build()}));b.appendChild(r)});
+b.appendChild(btn("+ Thêm dòng xe","sm add",function(){S.uuDai.push({xe:"",trieu:""});build()}));
+b.appendChild(el("div","small","Quà tặng"));
+S.quaTang.forEach(function(x,i){var r=el("div","row1");r.appendChild(inp(x,"Ví dụ: Quà tặng 8/3 và 20/10","text",function(v){S.quaTang[i]=v}));r.appendChild(btn("Xóa","sm del",function(){S.quaTang.splice(i,1);build()}));b.appendChild(r)});
+b.appendChild(btn("+ Thêm quà tặng","sm add",function(){S.quaTang.push("");build()}));
+root.appendChild(b);
+var e=el("section","box");e.appendChild(el("h2",null,"Ưu đãi nổi bật theo tuần, tháng"));
+e.appendChild(el("div","small","Hiện thành mục riêng dưới phần quyền lợi. Để trống thì mục này ẩn."));
+S.uuDaiThem.forEach(function(x,i){var r=el("div","row3");
+r.appendChild(inp(x.tieuDe,"Tiêu đề","text",function(v){x.tieuDe=v}));
+r.appendChild(inp(x.noiDung,"Nội dung","text",function(v){x.noiDung=v}));
+r.appendChild(inp(x.hanDen,"Đến ngày","text",function(v){x.hanDen=v}));
+r.appendChild(btn("Xóa","sm del",function(){S.uuDaiThem.splice(i,1);build()}));e.appendChild(r)});
+e.appendChild(btn("+ Thêm chương trình","sm add",function(){S.uuDaiThem.push({tieuDe:"",noiDung:"",hanDen:""});build()}));
+root.appendChild(e);
+}
+function clean(){
+var d=JSON.parse(JSON.stringify(S));
+d.dacQuyen=d.dacQuyen.map(function(x){return String(x).trim()}).filter(Boolean);
+d.uuDai=d.uuDai.filter(function(x){return x.xe&&Number(x.trieu)>0}).map(function(x){return{xe:x.xe.trim(),trieu:Number(x.trieu)}});
+d.quaTang=d.quaTang.map(function(x){return String(x).trim()}).filter(Boolean);
+d.uuDaiThem=d.uuDaiThem.filter(function(x){return x.tieuDe||x.noiDung});
+return d}
+document.getElementById("dl").addEventListener("click",function(){
+save(new Blob([JSON.stringify(clean(),null,2)],{type:"application/json"}),"uu-dai.json");
+msg("Đã tải file uu-dai.json. Chép đè vào thư mục website rồi đưa lên Netlify.")});
+document.getElementById("cp").addEventListener("click",function(){
+var t=JSON.stringify(clean(),null,2);
+try{navigator.clipboard.writeText(t).then(function(){msg("Đã sao chép nội dung.")},function(){msg("Không sao chép được, hãy dùng nút tải file.")})}catch(e){msg("Không sao chép được, hãy dùng nút tải file.")}});
+S=norm(S);build();
+try{fetch("uu-dai.json",{cache:"no-store"}).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(d){S=norm(d);build()}).catch(function(){})}catch(e){}
+</script>
+</body>
+</html>

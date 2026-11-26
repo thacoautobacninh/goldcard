@@ -1,0 +1,29 @@
+{
+  "capNhat": "02/11/2026",
+  "hotline": "0901 881 326",
+  "thongBao": "",
+  "dacQuyen": [
+    "Ưu đãi khi mua xe mới",
+    "Ưu tiên tiếp nhận dịch vụ"
+  ],
+  "uuDai": [
+    {
+      "xe": "RAM - JEEP",
+      "trieu": 120
+    },
+    {
+      "xe": "BMW - MINI",
+      "trieu": 80
+    },
+    {
+      "xe": "PEUGEOT",
+      "trieu": 30
+    },
+    {
+      "xe": "KIA Carnival và Mazda CX-90",
+      "trieu": 20
+    }
+  ],
+  "quaTang": [],
+  "uuDaiThem": []
+}
